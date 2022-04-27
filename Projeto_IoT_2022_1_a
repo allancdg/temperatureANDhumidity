@@ -1,0 +1,35 @@
+#include "DHT.h"
+
+#define DHTTYPE DHT11
+
+//Definição dos pinos
+int DHTPin = 4;
+
+//Inicializa o sensor DHT
+DHT dht(DHTPin, DHTTYPE);
+
+//Declaração das variáveis
+float Temperature;
+float Humidity;
+
+void setup() {
+  Serial.begin(115200);
+  delay(100);
+
+  pinMode(DHTPin, INPUT);
+
+  dht.begin();
+
+}
+
+void loop() {
+ //Leitura dos dados
+  Temperature = dht.readTemperature();
+  Humidity = dht.readHumidity();
+
+  Serial.print("Temperatura: ");
+  Serial.println(Temperature);
+  Serial.print("Humidade: ");
+  Serial.println(Humidity);
+  delay(1000);
+}
