@@ -24,8 +24,8 @@ String lineData = "";
 WiFiClient ESPWiFiClient;
 PubSubClient mqttClient(ESPWiFiClient);
 
-const char* wifi_ssid = "Sergio_2G";
-const char* wifi_password = "upanema23";
+const char* wifi_ssid = ""; // LEMBRAR DE CONFIGURAR SSID
+const char* wifi_password = ""; // LEMBRAR DE CONFIGURAR PASSWORD
 int wifi_timeout = 10000;
 
 const char* mqtt_broker = "broker.hivemq.com";
@@ -64,9 +64,8 @@ void connectWifi(){
 
 //CONFIGURAÇÃO DO MQTT
 void configMQTT(){
-  Serial.println("Conectando ao broker MQTT ...");
   mqttClient.setServer(mqtt_broker, mqtt_port);
-  Serial.println("Conectado ao broker!");
+  Serial.println("Configuração do broker efetuada!");
 }
 
 void connectMQTT(){
@@ -105,7 +104,6 @@ String retornaComoString(float Temperatura, float Humidade, String tempoDaMedica
 
 void setup() {
   Serial.begin(115200);
-  delay(1000);
 
   //Configuração de INPUT/OUTPUT dos sensores/atuadores 
   //Sensor DHT11 -> Pino D4 -> Recebimento dos dados
@@ -127,21 +125,12 @@ void loop() {
  //Leitura dos dados
   Temperature = dht.readTemperature();
   Humidity = dht.readHumidity();
-  measurementTime = "01/01/2022 - 10:20:30 "; // VERIFICAR FORMA DE OBTER A DATA/HORA
-
-//Escrita na porta Serial
-  /*Serial.print("Temperatura: ");
-  Serial.print(Temperature);
-  Serial.print("ºC \t Humidade: ");
-  Serial.print(Humidity);
-  Serial.print("% \t Data: ");
-  Serial.print(measurementTime);
-  Serial.println();*/
+  measurementTime = "Set data "; // VERIFICAR FORMA DE OBTER A DATA/HORA
   
   String lineDataFull = retornaComoString(Temperature, Humidity, measurementTime);
   Serial.println(lineDataFull);
   
-  delay(5000);
+  delay(60000); // Tempo de amostragem = 60 segundos
 
   if(!mqttClient.connected()){
     connectMQTT();
@@ -149,6 +138,6 @@ void loop() {
 
   if(mqttClient.connected()){
     mqttClient.loop();
-    //mqttClient.publish("/imd0902/projeto/freezer", lineDataFull, true); // À CORRIGIR
+    //mqttClient.publish("/imd0902/projeto/freezer", lineDataFull.c_str(), true);
   }
 }
