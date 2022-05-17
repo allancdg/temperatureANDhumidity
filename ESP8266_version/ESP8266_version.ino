@@ -93,7 +93,7 @@ String retornaComoString(float Temperatura, float Humidade, String tempoDaMedica
   String lineData = "";
   lineData += "Temperatura: ";
   lineData += String(Temperatura, 1);
-  lineData += "ºC \t Humidade: ";
+  lineData += "ºC \t Umidade: ";
   lineData += String(Humidade);
   lineData += "% \t Data: ";
   lineData += tempoDaMedicao;
