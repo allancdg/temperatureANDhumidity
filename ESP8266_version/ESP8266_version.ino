@@ -53,9 +53,9 @@ void connectWifi(){
 
   //Informa se a conexão falhou ou, caso tenha conectado, informa o IP
   if(WiFi.status() != WL_CONNECTED){
-    Serial.println("Conexion has failed!");
+    Serial.println("Connection has failed!");
   } else {
-    Serial.print("conected with IP: ");
+    Serial.print("Connected with IP: ");
     Serial.println(WiFi.localIP());
   }
 }
@@ -74,7 +74,7 @@ void connectMQTT(){
   unsigned long startTime = millis();
   while(!mqttClient.connected() && (millis() - startTime < mqtt_timeout)){
     Serial.print(".");
-    String clientId = "ESP32ClientAllan-";
+    String clientId = "ESP8266ClientAngelo-";
     clientId += String(random(0xffff), HEX); // Geração de complemento do nome randomico
 
     if(mqttClient.connect(clientId.c_str())){
@@ -83,33 +83,35 @@ void connectMQTT(){
     }
     delay(1000);
   }
+  if(!mqttClient.connected()){
+    Serial.print("Conexão com o broker MQTT não estabelecida!");
+  }
   Serial.println();
 }
 
 // ----------------------------------------------------------------------- //
 
 //TRANSFORMAÇÃO DO RESULTADO EM STRING
-String retornaComoString(float Temperatura, float Humidade, String tempoDaMedicao){
+String retornaComoString(float Temperatura, float Umidade, String tempoDaMedicao){
   String lineData = "";
   lineData += "Temperatura: ";
   lineData += String(Temperatura, 1);
   lineData += "ºC \t Umidade: ";
-  lineData += String(Humidade);
+  lineData += String(Umidade);
   lineData += "% \t Data: ";
   lineData += tempoDaMedicao;
-  lineData += "\n";
   return lineData;
 }
 
 // ----------------------------------------------------------------------- //
 
 //PEGAR FORMATAÇÃO DE DATA
-String getTime(){
+String getTime(char* fmt){
   time_t now = time(nullptr);
   struct tm *timeinfo;
   timeinfo = localtime(&now);
   char buffer[80];
-  strftime(buffer, 80, "%H:%M:%S %d-%m-%Y", timeinfo);
+  strftime(buffer, 80, fmt, timeinfo);
   String time_str(buffer);
   return time_str;
 }
@@ -133,8 +135,12 @@ void setup() {
   }
 
   configTime(-3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
-  Serial.println("\nWaiting for time");
+  Serial.print("\nWaiting for time");
   while (!time(nullptr)) {
+    Serial.print(".");
+    delay(1000);
+  }
+  while (getTime("%Y") != "2022"){
     Serial.print(".");
     delay(1000);
   }
@@ -148,12 +154,10 @@ void loop() {
   // Leitura dos dados
   Temperature = dht.readTemperature();
   Humidity = dht.readHumidity();
-  measurementTime = getTime();
+  measurementTime = getTime("%H:%M:%S %d-%m-%Y");
   
   String lineDataFull = retornaComoString(Temperature, Humidity, measurementTime);
   Serial.println(lineDataFull);
-  
-  delay(2000); // Tempo de amostragem = 60 segundos
 
   if(!mqttClient.connected()){
     connectMQTT();
@@ -161,6 +165,12 @@ void loop() {
 
   if(mqttClient.connected()){
     mqttClient.loop();
-    //mqttClient.publish("/imd0902/projeto/freezer", lineDataFull.c_str(), true);
+    char a[10];
+    sprintf(a, "%.2f", Temperature);
+    mqttClient.publish("/imd0902/projeto/grupo02/temperatura", a, true);
+    sprintf(a, "%.2f", Humidity);
+    mqttClient.publish("/imd0902/projeto/grupo02/umidade", a, true);
   }
+
+  delay(60000); // Tempo de amostragem = 60 segundos
 }
