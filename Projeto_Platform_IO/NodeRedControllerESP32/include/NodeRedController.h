@@ -2,7 +2,7 @@
 #define NODE_RED_CONTROLLER_H
 
 #include <Arduino.h>
-#include <ESP8266WiFi.h>
+#include <WiFi.h>
 #include <PubSubClient.h>
 #include <WiFiClient.h>
 
@@ -34,10 +34,10 @@ private:
 	// MQTT
 	const char *mqtt_username = "angelo";
 	const char *mqtt_password = "angelo";
-	const char *mqtt_broker = "192.168.1.102";
+	const char *mqtt_broker = "192.168.1.114";
 	int mqtt_port = 1883;
 	int mqtt_timeout = 10000;
-	String clientId = "ESP8266ClientAngelo-";
+	String clientId = "ESP32ClientAllan-";
 
 	String last_topic;
 	String last_msg;
@@ -78,8 +78,6 @@ public:
 	inline int getState(){
 		return (int)state;
 	}
-
-	int sendData(String topic, float data);
 
 	void checkLife(int max_attempts, int timeout);
 };

@@ -86,24 +86,22 @@ void loop()
   if ((int)(millis() - startTime) > 10000) // Tempo de amostragem = 10 segundos
   { 
     // Leitura dos dados
+    node.checkLife(10, 1000);
+
     Temperature = dht.readTemperature();
     Humidity = dht.readHumidity();
     //measurementTime = getTime("%H:%M:%S %d-%m-%Y");
 
-    int rT = node.sendData("temperatura", Temperature);
-    int rU = node.sendData("umidade", Humidity);
-
-    if (rT + rU > 0)
-    {
-      Serial.println("Some or all values weren't sent properly");
-    }
-
+    //String lineDataFull = retornaComoString(Temperature, Humidity, measurementTime);
     String lineDataFull = retornaComoString(Temperature, Humidity, measurementTime);
     Serial.println(lineDataFull);
 
     startTime = millis();
   }
 
+  // char a[10];
+  // sprintf(a, "%.2f", Temperature);
+  // char *topic = (char *)"/dados/temperatura";
   node.loop();
 
   delay(100);

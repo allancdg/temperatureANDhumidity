@@ -306,27 +306,6 @@ void NodeRedController::checkLife(int max_attempts, int timeout)
 	unsubscribe((char *)sub_topic2.c_str());
 }
 
-int NodeRedController::sendData(String topic, float data)
-{
-	Serial.println("Sending " + topic + " data.");
-	checkLife(10, 5000);
-
-	if (state != NODE_RED_CONNECTED){
-		Serial.println("Client " + clientId + " not connected, can't send message, please reboot and try again.");
-		return 1;
-	}
-
-	char s_data[10];
-  	sprintf(s_data, "%.2f", data);
-
-	String pub_d_topic = "/data/send";
-	String message = clientId + "+" + topic + "+" + data;
-
-	publish((char *)pub_d_topic.c_str(), (char *)message.c_str());
-
-	return 0;
-}
-
 void NodeRedController::init(int timeout)
 {
 	initWiFiMQTT();
