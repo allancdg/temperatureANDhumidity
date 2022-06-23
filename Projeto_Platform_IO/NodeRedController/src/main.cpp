@@ -10,11 +10,11 @@ int DHTPin = 4;
 // Configuração do sensor DHT11
 DHT dht(DHTPin, DHTTYPE);
 
-
 // Declaração das variáveis
 float Temperature;
 float Humidity;
 String measurementTime;
+unsigned long startTime;
 
 // Configuração do Controlador
 NodeRedController node;
@@ -59,7 +59,7 @@ void setup()
   dht.begin();
 
   // Conecta a wifi e configura conexão com broker
-  node.initWiFiMQTT();
+  node.init(10000);
 
   configTime(-3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
   Serial.print("\nWaiting for time");
@@ -74,24 +74,33 @@ void setup()
     delay(1000);
   }
   Serial.println("");
+
+  startTime = millis();
 }
 
 // ----------------------------------------------------------------------- //
 
 void loop()
 {
-  // Leitura dos dados
-  Temperature = dht.readTemperature();
-  Humidity = dht.readHumidity();
-  measurementTime = getTime("%H:%M:%S %d-%m-%Y");
+  if ((int)(millis() - startTime) > 10000) // Tempo de amostragem = 10 segundos
+  { 
+    // Leitura dos dados
+    node.checkLife(10, 1000);
 
-  String lineDataFull = retornaComoString(Temperature, Humidity, measurementTime);
-  Serial.println(lineDataFull);
+    Temperature = dht.readTemperature();
+    Humidity = dht.readHumidity();
+    measurementTime = getTime("%H:%M:%S %d-%m-%Y");
 
-  char a[10];
-  sprintf(a, "%.2f", Temperature);
-  char *topic = (char *)"/dados/temperatura";
-  node.publish(topic, a);
+    String lineDataFull = retornaComoString(Temperature, Humidity, measurementTime);
+    Serial.println(lineDataFull);
 
-  delay(30000); // Tempo de amostragem = 60 segundos
+    startTime = millis();
+  }
+
+  // char a[10];
+  // sprintf(a, "%.2f", Temperature);
+  // char *topic = (char *)"/dados/temperatura";
+  node.loop();
+
+  delay(100);
 }

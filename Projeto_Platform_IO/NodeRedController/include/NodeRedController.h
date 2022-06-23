@@ -9,47 +9,77 @@
 class WiFiClient;
 class PubSubClient;
 
+enum NodeRedState
+{
+	NODE_RED_UNDEFINED = -9999,
+	NODE_RED_DISCONNECTED = -1,
+	NODE_RED_CONNECTED = 0,
+	NODE_RED_CONNECTING = 1,
+	NODE_RED_DISCONNECTING = 2,
+	NODE_RED_KEEP_ALIVE = 3
+};
+
 class NodeRedController
 {
 private:
-  WiFiClient ESPWiFiClient;
-  PubSubClient mqttClient;
+	WiFiClient ESPWiFiClient;
+	PubSubClient mqttClient;
+	NodeRedState state = NODE_RED_DISCONNECTED;
 
-  // WiFi
-  const char *wifi_ssid = "Zil";
-  const char *wifi_password = "angelo2430";
-  int wifi_timeout = 10000;
+	// WiFi
+	const char *wifi_ssid = "Zil";
+	const char *wifi_password = "angelo2430";
+	int wifi_timeout = 10000;
 
-  // MQTT
-  const char *mqtt_username = "angelo";
-  const char *mqtt_password = "angelo";
-  const char *mqtt_broker = "192.168.1.9";
-  int mqtt_port = 1883;
-  int mqtt_timeout = 10000;
-  String clientId = "ESP8266ClientAngelo-";
+	// MQTT
+	const char *mqtt_username = "angelo";
+	const char *mqtt_password = "angelo";
+	const char *mqtt_broker = "192.168.1.9";
+	int mqtt_port = 1883;
+	int mqtt_timeout = 10000;
+	String clientId = "ESP8266ClientAngelo-";
 
-  void connectWiFi();
-  void configMQTT();
-  void connectMQTT();
+	String last_topic;
+	String last_msg;
+	unsigned int last_length;
 
-  public:
-  NodeRedController()
-  {
-    mqttClient.setClient(ESPWiFiClient);
-    clientId += String(random(0xffff), HEX); // Geração de complemento do nome randomico
-  }
+	void mqtt_callback(char* topic, byte* payload, unsigned int length);
+	void connectWiFi();
+	void configMQTT();
+	void connectMQTT();
+	void initWiFiMQTT();
+	void publish(char *topic, char *msg);
+	void subscribe(char *topic);
+	void unsubscribe(char *topic);
+	int forceSubNewMsg(String prev_msg, int timeout);
+	NodeRedState connectToNode(int timeout, int max_attempts);
+	void startKeepAlive();
+	void keepAlive(String who);
 
-  NodeRedController(
-      const char *wifissid, const char *wifipasswd,
-      int wifitimeout, const char *mqttusername,
-      const char *mqttpasswd, const char *mqttbroker,
-      int mqttport, int mqtttimeout);
+public:
+	NodeRedController()
+	{
+		mqttClient.setClient(ESPWiFiClient);
+		clientId += String(random(0xffff), HEX); // Geração de complemento do nome randomico
+	}
 
-  ~NodeRedController() = default;
+	NodeRedController(
+		const char *wifissid, const char *wifipasswd,
+		int wifitimeout, const char *mqttusername,
+		const char *mqttpasswd, const char *mqttbroker,
+		int mqttport, int mqtttimeout);
 
-  void initWiFiMQTT();
+	~NodeRedController() = default;
 
-  void publish(char *topic, char *msg);
+	void init(int timeout);
+
+	void loop() { mqttClient.loop(); }
+
+	inline int getState(){
+		return (int)state;
+	}
+
+	void checkLife(int max_attempts, int timeout);
 };
 
 #endif // NODE_RED_CONTROLLER_H
