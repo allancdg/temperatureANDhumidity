@@ -1,0 +1,991 @@
+[
+    {
+        "id": "02720ec3e6116be1",
+        "type": "tab",
+        "label": "Flow 1 - Connect",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7d4b428e61805de7",
+        "type": "mqtt in",
+        "z": "02720ec3e6116be1",
+        "name": "/connect/userID",
+        "topic": "/connect/userID",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "cd591e8b8c4ed71c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 160,
+        "wires": [
+            [
+                "873e402a5876491c"
+            ]
+        ]
+    },
+    {
+        "id": "55de71e4cd57303e",
+        "type": "mqtt out",
+        "z": "02720ec3e6116be1",
+        "name": "adafruit/lastUser",
+        "topic": "Pudimi/feeds/lastUser",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "09126019498dc839",
+        "x": 600,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "873e402a5876491c",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "PushUserID",
+        "func": "let uidList = flow.get('uidList');\nlet uid = msg.payload;\n\nif (!uidList.includes(uid)){\n    uidList.push(uid);\n    flow.set('uidList', uidList);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 160,
+        "wires": [
+            [
+                "e501df67770a588a",
+                "c2c1374e3179b386"
+            ]
+        ]
+    },
+    {
+        "id": "e0d2890a8ac4ee29",
+        "type": "debug",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "5a4589ed61b99355",
+        "type": "mqtt in",
+        "z": "02720ec3e6116be1",
+        "name": "/connect/reply",
+        "topic": "/connect/reply",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "cd591e8b8c4ed71c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 850,
+        "y": 240,
+        "wires": [
+            [
+                "e0d2890a8ac4ee29"
+            ]
+        ]
+    },
+    {
+        "id": "e501df67770a588a",
+        "type": "mqtt out",
+        "z": "02720ec3e6116be1",
+        "name": "/connect/replyTo",
+        "topic": "/connect/replyTo",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cd591e8b8c4ed71c",
+        "x": 640,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "5db97a3edcf399c2",
+        "type": "mqtt in",
+        "z": "02720ec3e6116be1",
+        "name": "/connect/isUserConnected",
+        "topic": "/connect/isUserConnected",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "cd591e8b8c4ed71c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 240,
+        "wires": [
+            [
+                "aab81ec7b0e86b1b"
+            ]
+        ]
+    },
+    {
+        "id": "aab81ec7b0e86b1b",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "IsUserConnected",
+        "func": "let uidList = flow.get('uidList');\nlet uid = msg.payload;\nlet ret;\n\nif (uidList.includes(uid)){\n    ret = uid+\" is connected\";\n} else {\n    ret = uid+\" is not connected\";\n}\n\nmsg.payload = ret;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 240,
+        "wires": [
+            [
+                "25201b9471b9f7db"
+            ]
+        ]
+    },
+    {
+        "id": "25201b9471b9f7db",
+        "type": "mqtt out",
+        "z": "02720ec3e6116be1",
+        "name": "/connect/reply",
+        "topic": "/connect/reply",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cd591e8b8c4ed71c",
+        "x": 640,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "8eec70f038d74581",
+        "type": "mqtt in",
+        "z": "02720ec3e6116be1",
+        "name": "/connect/replyTo",
+        "topic": "/connect/replyTo",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "cd591e8b8c4ed71c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 860,
+        "y": 160,
+        "wires": [
+            [
+                "20ff611a0b8d35fb"
+            ]
+        ]
+    },
+    {
+        "id": "20ff611a0b8d35fb",
+        "type": "debug",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c2592f2199b624f6",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "Create Variables",
+        "func": "",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"uidList\", []);\nflow.set(\"lastDeath\", 'None');\nflow.set(\"toDieList\", []);",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "71ea73d706bbd101",
+        "type": "inject",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 40,
+        "wires": [
+            [
+                "c2592f2199b624f6"
+            ]
+        ]
+    },
+    {
+        "id": "41d5daf93c04d319",
+        "type": "inject",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 380,
+        "wires": [
+            [
+                "5fbd0619a5d817c4"
+            ]
+        ]
+    },
+    {
+        "id": "5fbd0619a5d817c4",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "keepAliveRequest",
+        "func": "let uidList = flow.get('uidList');\nlet toDieList = flow.get('toDieList');\nlet lastDeath = flow.get('lastDeath');\nlet msgList = [];\n\nif (uidList.length <= 0){\n    msg.payload = \"i see dead people\";\n    return msg;\n}\n\n\nfor (var i = uidList.length -1; i >= 0; i--) {\n    let uid = uidList[i];\n    \n    if (!toDieList.includes(uid)){\n        toDieList.push(uid);\n        msgList.push({payload: uid + \" is set to die\"});\n    } else {\n        uidList.splice(i, 1);\n        msgList.push({payload: uid + \" is dead\", death: 'true'});\n        lastDeath = uid;\n    }\n}\n\nflow.set('toDieList', toDieList);\nflow.set('uidList', uidList);\n\nreturn [msgList];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 380,
+        "wires": [
+            [
+                "2d0ebcf43a045dc2",
+                "01def24ca9feb953"
+            ]
+        ]
+    },
+    {
+        "id": "2d0ebcf43a045dc2",
+        "type": "mqtt out",
+        "z": "02720ec3e6116be1",
+        "name": "/connect/keepAlive",
+        "topic": "/connect/keepAlive",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cd591e8b8c4ed71c",
+        "x": 570,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "5606168da2073ff3",
+        "type": "mqtt in",
+        "z": "02720ec3e6116be1",
+        "name": "/connect/imAlive",
+        "topic": "/connect/imAlive",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "cd591e8b8c4ed71c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 460,
+        "wires": [
+            [
+                "3cec6c6b0c747759"
+            ]
+        ]
+    },
+    {
+        "id": "88cd0c73f8210639",
+        "type": "mqtt in",
+        "z": "02720ec3e6116be1",
+        "name": "/connect/keepAlive",
+        "topic": "/connect/keepAlive",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "cd591e8b8c4ed71c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 830,
+        "y": 380,
+        "wires": [
+            [
+                "3efb3091e1301365"
+            ]
+        ]
+    },
+    {
+        "id": "3efb3091e1301365",
+        "type": "debug",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "3cec6c6b0c747759",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "keepAliveResponse",
+        "func": "let uidList = flow.get('uidList');\nlet toDieList = flow.get('toDieList');\n\nlet uid = msg.payload;\n\nif (toDieList.length > 0) {\n    \n    if (toDieList.includes(uid)){\n        const index = toDieList.indexOf(uid);\n        if (index > -1) {\n          toDieList.splice(index, 1); // 2nd parameter means remove one item only\n        }\n        flow.set('toDieList', toDieList);\n        msg.payload = uid + ' has avoided death';\n        msg.survivor = 'true';\n        \n    } else {\n        msg.payload = uid + \" is not set to die\";\n    }\n    \n} else {\n    \n    msg.payload = \"everyone is alive\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 460,
+        "wires": [
+            [
+                "c3e6e3676e8682b3",
+                "44e25b7edc1b7b15"
+            ]
+        ]
+    },
+    {
+        "id": "c3e6e3676e8682b3",
+        "type": "debug",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "d4940ce233cab886",
+        "type": "inject",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "20",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 600,
+        "wires": [
+            [
+                "692da6cb086e7ddf",
+                "c4fbce78b666e252",
+                "fe50974a07b60432"
+            ]
+        ]
+    },
+    {
+        "id": "692da6cb086e7ddf",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "lastUser",
+        "func": "let uidList = flow.get('uidList');\n\nlet txt = uidList[uidList.length - 1]\nif (txt == undefined){\n    txt = 'None'\n}\nmsg.payload = txt;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 600,
+        "wires": [
+            [
+                "55de71e4cd57303e"
+            ]
+        ]
+    },
+    {
+        "id": "c7e285d259e4df40",
+        "type": "mqtt out",
+        "z": "02720ec3e6116be1",
+        "name": "adafruit/connectedUsers",
+        "topic": "Pudimi/feeds/connectedUsers",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "09126019498dc839",
+        "x": 630,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "c4fbce78b666e252",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "connectedUsers",
+        "func": "let uidList = flow.get('uidList');\n\nlet txt;\n\nif (uidList.length == 0){\n    txt = 'None';\n} else {\n    txt = '';\n}\n\nfor (let i=0; i<uidList.length; i++){\n    txt += uidList[i] + '\\n';\n}\nmsg.payload = txt;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 660,
+        "wires": [
+            [
+                "c7e285d259e4df40"
+            ]
+        ]
+    },
+    {
+        "id": "c43b25fe1341e81b",
+        "type": "comment",
+        "z": "02720ec3e6116be1",
+        "name": "Initial Connection",
+        "info": "",
+        "x": 160,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "55794b353fa00b9b",
+        "type": "comment",
+        "z": "02720ec3e6116be1",
+        "name": "Mantaining Alive",
+        "info": "",
+        "x": 160,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "c774e975878f36a1",
+        "type": "comment",
+        "z": "02720ec3e6116be1",
+        "name": "Send Connection Data",
+        "info": "",
+        "x": 180,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "51ea1465b3efbdc0",
+        "type": "comment",
+        "z": "02720ec3e6116be1",
+        "name": "Send Data",
+        "info": "",
+        "x": 140,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "2dbff4d680dd593e",
+        "type": "mqtt in",
+        "z": "02720ec3e6116be1",
+        "name": "/data/send",
+        "topic": "/data/send",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "cd591e8b8c4ed71c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 780,
+        "wires": [
+            [
+                "b70e89a360ac6007"
+            ]
+        ]
+    },
+    {
+        "id": "b70e89a360ac6007",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "getData",
+        "func": "let uidList = flow.get('uidList');\nlet txt = msg.payload\nlet elem = txt.split(\"+\");\n\nif(elem.length != 3){\n    msg.topic = \"Pudimi/feeds/error\";\n    msg.payload = \"wrong data \"+ txt;\n} else {\n    let uid = elem[0];\n    let topic = elem[1];\n    let data = elem[2];\n    \n    if(!uidList.includes(uid)){\n        msg.topic = \"Pudimi/feeds/error\";\n        msg.payload = \"user \" + uid + \" isnt connected\";\n    } else {\n        msg.topic = \"Pudimi/feeds/\"+topic;\n        msg.payload = data;\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 780,
+        "wires": [
+            [
+                "b097a40840625355"
+            ]
+        ]
+    },
+    {
+        "id": "a181065a56295bb9",
+        "type": "mqtt out",
+        "z": "02720ec3e6116be1",
+        "name": "adafruit/dynamicTopic",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "09126019498dc839",
+        "x": 640,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "5322996d5ceadc67",
+        "type": "mqtt in",
+        "z": "02720ec3e6116be1",
+        "name": "adafruit/error",
+        "topic": "Pudimi/feeds/error",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "09126019498dc839",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 890,
+        "y": 780,
+        "wires": [
+            [
+                "7a4bf58102511b3d"
+            ]
+        ]
+    },
+    {
+        "id": "7a4bf58102511b3d",
+        "type": "debug",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1070,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "b097a40840625355",
+        "type": "delay",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 440,
+        "y": 780,
+        "wires": [
+            [
+                "a181065a56295bb9"
+            ]
+        ]
+    },
+    {
+        "id": "8226fc12479c5181",
+        "type": "mqtt out",
+        "z": "02720ec3e6116be1",
+        "name": "adafruit/events",
+        "topic": "Pudimi/feeds/events",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "09126019498dc839",
+        "x": 940,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "c2c1374e3179b386",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "Joining",
+        "func": "\nlet uid = msg.payload;\n\nmsg.payload = uid + \" has joined! Hi!\";\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 80,
+        "wires": [
+            [
+                "3d0c77871103f53e"
+            ]
+        ]
+    },
+    {
+        "id": "01def24ca9feb953",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "Deaths",
+        "func": "let death = msg.death;\n\nif (death == \"true\"){\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 320,
+        "wires": [
+            [
+                "91f9ef07459b5a09"
+            ]
+        ]
+    },
+    {
+        "id": "3d0c77871103f53e",
+        "type": "delay",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 780,
+        "y": 80,
+        "wires": [
+            [
+                "8226fc12479c5181"
+            ]
+        ]
+    },
+    {
+        "id": "91f9ef07459b5a09",
+        "type": "delay",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 680,
+        "y": 320,
+        "wires": [
+            [
+                "31b4d31700c2eb59"
+            ]
+        ]
+    },
+    {
+        "id": "31b4d31700c2eb59",
+        "type": "mqtt out",
+        "z": "02720ec3e6116be1",
+        "name": "adafruit/events",
+        "topic": "Pudimi/feeds/events",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "09126019498dc839",
+        "x": 840,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "44e25b7edc1b7b15",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "Survivors",
+        "func": "\nif (msg.survivor == 'true'){\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 520,
+        "wires": [
+            [
+                "bdd970baec4bf372"
+            ]
+        ]
+    },
+    {
+        "id": "bdd970baec4bf372",
+        "type": "delay",
+        "z": "02720ec3e6116be1",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 740,
+        "y": 520,
+        "wires": [
+            [
+                "db28d394deacf8fa"
+            ]
+        ]
+    },
+    {
+        "id": "db28d394deacf8fa",
+        "type": "mqtt out",
+        "z": "02720ec3e6116be1",
+        "name": "adafruit/events",
+        "topic": "Pudimi/feeds/events",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "09126019498dc839",
+        "x": 900,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "035284ec62e41260",
+        "type": "mqtt in",
+        "z": "02720ec3e6116be1",
+        "name": "ada/events",
+        "topic": "Pudimi/feeds/events",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "09126019498dc839",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 920,
+        "y": 660,
+        "wires": [
+            [
+                "23ac4d78d5422a53"
+            ]
+        ]
+    },
+    {
+        "id": "23ac4d78d5422a53",
+        "type": "debug",
+        "z": "02720ec3e6116be1",
+        "name": "eventos",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "76e2ea3b63724ae1",
+        "type": "mqtt out",
+        "z": "02720ec3e6116be1",
+        "name": "adafruit/connectedUsersNo",
+        "topic": "Pudimi/feeds/connectedUsersNo",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "09126019498dc839",
+        "x": 640,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "fe50974a07b60432",
+        "type": "function",
+        "z": "02720ec3e6116be1",
+        "name": "connectedUsersNo",
+        "func": "let uidList = flow.get('uidList');\n\nmsg.payload = uidList.length.toString();\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 720,
+        "wires": [
+            [
+                "76e2ea3b63724ae1"
+            ]
+        ]
+    },
+    {
+        "id": "cd591e8b8c4ed71c",
+        "type": "mqtt-broker",
+        "name": "raspberry-mqtt-broker",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "09126019498dc839",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "io.adafruit.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    }
+]

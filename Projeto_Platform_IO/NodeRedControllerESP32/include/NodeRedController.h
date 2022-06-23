@@ -26,15 +26,15 @@ private:
 	PubSubClient mqttClient;
 	NodeRedState state = NODE_RED_DISCONNECTED;
 
-	// WiFik
-	const char *wifi_ssid = "linksys";
-	const char *wifi_password = "";
+	// WiFi
+	const char *wifi_ssid = "ADICIONAR SSID";
+	const char *wifi_password = "ADICIONAR PASSWORD";
 	int wifi_timeout = 10000;
 
 	// MQTT
 	const char *mqtt_username = "angelo";
 	const char *mqtt_password = "angelo";
-	const char *mqtt_broker = "192.168.1.114";
+	const char *mqtt_broker = "ADICIONAR IP";
 	int mqtt_port = 1883;
 	int mqtt_timeout = 10000;
 	String clientId = "ESP32ClientAllan-";
@@ -78,6 +78,8 @@ public:
 	inline int getState(){
 		return (int)state;
 	}
+	
+	int sendData(String topic, float data);
 
 	void checkLife(int max_attempts, int timeout);
 };
